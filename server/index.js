@@ -24,8 +24,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/languages", async (req, res) => {
-  const languages = await LanguageModel.find({});
-  res.json(languages);
+  try {
+    const languages = await LanguageModel.find({});
+    res.json(languages);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 app.get("/:id", async (req, res) => {
@@ -35,6 +40,19 @@ app.get("/:id", async (req, res) => {
     res.json(exercises);
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/:exerciseId/questions", async (req, res) => {
+  const exerciseId = req.params.exerciseId;
+  try {
+    const exercise = await ExerciseModel.findById(exerciseId);
+    if (!exercise) return res.status(404).json({ error: "Exercise not found" });
+    const questions = exercise.questions;
+    res.json(questions);
+  } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
