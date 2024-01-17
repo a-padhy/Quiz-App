@@ -23,9 +23,13 @@ const ResultPage = () => {
   return (
     <div className="text-center">
       {loading ? (
-        <p>Loading Score!</p>
+        <p className="text-xl font-bold text-stone-700">Loading Score...</p>
       ) : (
-        <div>Your Score is : {`${score}`}</div>
+        <div className="mt-8">
+          <p className="text-3xl font-bold text-stone-500">
+            Your Score is: {`${score}`}
+          </p>
+        </div>
       )}
     </div>
   );

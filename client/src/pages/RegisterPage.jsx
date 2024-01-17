@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -14,7 +15,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username || !password) {
-      return alert("Please enter all details!");
+      return toast.warn("Please enter all details!");
     }
     try {
       await axios.post("/auth/register", {
@@ -22,10 +23,10 @@ const Register = () => {
         password,
         preferredLanguage,
       });
-      alert("Registration successful! Now you can login.");
+      toast.success("Registered Successfully!");
       navigate("/login");
     } catch (error) {
-      alert("Registration failed! Try again later.");
+      toast.error("Registration failed! Try again later.");
       console.error(error);
     }
   };
@@ -85,6 +86,12 @@ const Register = () => {
               <option value="french">French</option>
             </select>
           </div>
+          <p className="mb-2">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500">
+              Login
+            </Link>
+          </p>
           <button
             className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
             type="submit"

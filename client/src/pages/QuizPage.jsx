@@ -1,7 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-
-// TODO: Sticky Progress bar (Logic renew)
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -32,9 +30,11 @@ const Quiz = () => {
   }, [exerciseId]);
 
   const handleAnswerChange = (index, answer) => {
-    const updatedAnswers = [...answers];
-    updatedAnswers[index] = answer;
-    setAnswers(updatedAnswers);
+    setAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[index] = answer;
+      return updatedAnswers;
+    });
   };
 
   const calculateScore = async () => {
@@ -50,26 +50,29 @@ const Quiz = () => {
     }
   };
 
-  const answeredQuestions = answers.filter((answer) => answer !== "").length;
+  const answeredQuestions = answers.filter(
+    (answer) => answer !== "" && answer !== undefined
+  ).length;
   const progress = (answeredQuestions / questions.length) * 100;
+  console.log(answers);
 
   return (
     <div className="max-w-xl mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
-      {/* <h2 className="text-2xl font-bold mb-4">Language: {language}</h2> */}
-
       <form className="space-y-4">
         {loading ? (
           <p className="text-center">Loading Questions</p>
         ) : (
           <>
             <h3 className="text-xl font-bold mb-2">Quiz Questions:</h3>
-            <div className="mb-4">
-              <progress
-                value={progress}
-                max="100"
-                className="w-full"
-              ></progress>
-              <p className="text-center">{`${answeredQuestions} / ${questions.length} answered`}</p>
+            <div className="sticky top-0 bg-white">
+              <div className="mb-4">
+                <progress
+                  value={progress}
+                  max="100"
+                  className="w-full"
+                ></progress>
+                <p className="text-center">{`${answeredQuestions} / ${questions.length} answered`}</p>
+              </div>
             </div>
             {questions.map((question, index) => (
               <div key={index} className="border p-4 rounded-md">

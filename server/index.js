@@ -1,6 +1,5 @@
 // TODO: no duplicate records in score
 // put request in scores
-// send exercise data in order
 
 import express from "express";
 import cors from "cors";
@@ -117,7 +116,6 @@ app.post("/result/:exerciseId", async (req, res) => {
     );
 
     if (languageProgressIndex !== -1) {
-      // If user has progress for the language, check if exercise is already completed
       const exerciseIndex = user.progress[
         languageProgressIndex
       ].completedExercises.findIndex(
@@ -125,17 +123,14 @@ app.post("/result/:exerciseId", async (req, res) => {
       );
 
       if (exerciseIndex !== -1) {
-        // If the exercise is already completed, replace it
         user.progress[languageProgressIndex].completedExercises[exerciseIndex] =
           new mongoose.Types.ObjectId(exerciseId);
       } else {
-        // If the exercise is not completed, add it
         user.progress[languageProgressIndex].completedExercises.push(
           new mongoose.Types.ObjectId(exerciseId)
         );
       }
     } else {
-      // If no progress for the language, add a new entry
       user.progress.push({
         language: new mongoose.Types.ObjectId(languageId),
         completedExercises: [new mongoose.Types.ObjectId(exerciseId)],

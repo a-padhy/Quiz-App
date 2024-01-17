@@ -7,7 +7,6 @@ import LeaderboardLinks from "../components/LeaderboardLinks";
 const HomePage = () => {
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const user = window.localStorage.getItem("username");
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -24,9 +23,6 @@ const HomePage = () => {
   }, []);
   return (
     <div className="bg-white text-black h-screen p-8 flex flex-col items-center justify-center">
-      <div className="text-3xl mb-4 text-center text-gray-800">
-        Hello {user}
-      </div>
       <h1 className="text-4xl font-bold mb-4">
         Welcome to the Language Learning Quiz
       </h1>

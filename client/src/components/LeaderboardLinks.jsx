@@ -15,7 +15,7 @@ const LeaderboardLinks = ({ languages, loading }) => (
           <Link
             key={language._id}
             to={`/leaderboard/${language._id}`}
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded m-2 transition duration-300 ease-in-out"
+            className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded m-2 transition duration-300 ease-in-out"
           >
             {language.name}
           </Link>
