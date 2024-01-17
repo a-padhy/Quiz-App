@@ -2,6 +2,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+
 import axios from "axios";
 
 const Quiz = () => {
@@ -11,7 +13,7 @@ const Quiz = () => {
   const [answers, setAnswers] = useState([]);
   const [score, setScore] = useState(null);
   const navigate = useNavigate();
-
+  const [cookies, _] = useCookies(["access_token"]);
   const userId = window.localStorage.getItem("userID");
 
   useEffect(() => {
@@ -39,10 +41,16 @@ const Quiz = () => {
 
   const calculateScore = async () => {
     try {
-      const response = await axios.post(`/result/${exerciseId}`, {
-        answers,
-        userId,
-      });
+      const response = await axios.post(
+        `/result/${exerciseId}`,
+        {
+          answers,
+          userId,
+        },
+        {
+          headers: { authorization: cookies.access_token },
+        }
+      );
       setScore(response.data);
       navigate(`/result/${exerciseId}`);
     } catch (error) {

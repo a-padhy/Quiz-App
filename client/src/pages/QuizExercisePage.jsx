@@ -1,8 +1,13 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const Exercises = () => {
+  const navigate = useNavigate();
+  const [cookies, _] = useCookies(["access_token"]);
   const { languageId } = useParams();
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,6 +15,9 @@ const Exercises = () => {
   useEffect(() => {
     const fetchExercises = async () => {
       try {
+        if (!cookies.access_token) {
+          return navigate("/login");
+        }
         const response = await axios.get(`/${languageId}`);
         setExercises(response.data);
       } catch (error) {
@@ -19,7 +27,7 @@ const Exercises = () => {
       }
     };
     fetchExercises();
-  }, [languageId]);
+  }, [languageId, cookies.access_token, navigate]);
 
   return (
     <div className="max-w-xl mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
