@@ -110,6 +110,39 @@ app.post("/result/:exerciseId", async (req, res) => {
       answers: answers,
     });
     await score.save();
+    const user = await UserModel.findById(userId);
+    const languageId = exercise.language.toString();
+    const languageProgressIndex = user.progress.findIndex(
+      (progress) => progress.language.toString() === languageId
+    );
+
+    if (languageProgressIndex !== -1) {
+      // If user has progress for the language, check if exercise is already completed
+      const exerciseIndex = user.progress[
+        languageProgressIndex
+      ].completedExercises.findIndex(
+        (completedExercise) => completedExercise.toString() === exerciseId
+      );
+
+      if (exerciseIndex !== -1) {
+        // If the exercise is already completed, replace it
+        user.progress[languageProgressIndex].completedExercises[exerciseIndex] =
+          new mongoose.Types.ObjectId(exerciseId);
+      } else {
+        // If the exercise is not completed, add it
+        user.progress[languageProgressIndex].completedExercises.push(
+          new mongoose.Types.ObjectId(exerciseId)
+        );
+      }
+    } else {
+      // If no progress for the language, add a new entry
+      user.progress.push({
+        language: new mongoose.Types.ObjectId(languageId),
+        completedExercises: [new mongoose.Types.ObjectId(exerciseId)],
+      });
+    }
+
+    await user.save();
     res.json({ score: userScore });
   } catch (error) {
     console.log(error);
@@ -118,7 +151,7 @@ app.post("/result/:exerciseId", async (req, res) => {
 });
 
 app.get("/leaderboard/:languageId", async (req, res) => {
-  const { languageId } = req.params;
+  const languageId = req.params.languageId;
   try {
     const scores = await ScoreModel.find().populate("user exercise");
     const scoresByLanguage = scores.filter(
@@ -137,6 +170,32 @@ app.get("/leaderboard/:languageId", async (req, res) => {
       score: score.score,
     }));
     res.json({ scoreDetails });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/profile/:id", async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await UserModel.findById(userId)
+      .populate("progress.language")
+      .populate("progress.completedExercises");
+    const progressDetails = {
+      _id: user._id,
+      progress: user.progress.map((prog) => ({
+        language: {
+          _id: prog.language._id,
+          name: prog.language.name,
+        },
+        completedExercises: prog.completedExercises.map((exercise) => ({
+          _id: exercise._id,
+          title: exercise.title,
+        })),
+      })),
+    };
+    res.json(progressDetails);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal Server Error" });

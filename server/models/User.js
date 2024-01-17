@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema({
         ref: "Language",
         required: true,
       },
-      proficiencyLevel: { type: Number, default: 0 },
       completedExercises: [
         { type: mongoose.Schema.Types.ObjectId, ref: "Exercise" },
       ],
