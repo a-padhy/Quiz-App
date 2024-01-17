@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import QuizPage from "./pages/QuizPage";
 import QuizExercisePage from "./pages/QuizExercisePage";
 import axios from "axios";
+import ResultPage from "./pages/ResultPage";
 
 axios.defaults.baseURL = "http://localhost:4000/";
 axios.defaults.withCredentials = true;
@@ -29,6 +30,7 @@ const App = () => {
             path="/:languageId/exercise/:exerciseId"
             element={<QuizPage />}
           />
+          <Route path="/result/:exerciseId" element={<ResultPage />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Router>

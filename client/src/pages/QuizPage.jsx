@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
+
+// TODO: Sticky Progress bar (Logic renew)
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Quiz = () => {
@@ -10,6 +12,9 @@ const Quiz = () => {
   const [loading, setLoading] = useState(true);
   const [answers, setAnswers] = useState([]);
   const [score, setScore] = useState(null);
+  const navigate = useNavigate();
+
+  const userId = window.localStorage.getItem("userID");
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -32,27 +37,17 @@ const Quiz = () => {
     setAnswers(updatedAnswers);
   };
 
-  const calculateScore = () => {
-    let userScore = 0;
-    questions.forEach((question, index) => {
-      if (
-        question.difficulty === "easy" &&
-        answers[index] === question.correctAnswer
-      ) {
-        userScore += 1;
-      } else if (
-        question.difficulty === "medium" &&
-        answers[index] === question.correctAnswer
-      ) {
-        userScore += 3;
-      } else if (
-        question.difficulty === "hard" &&
-        answers[index] === question.correctAnswer
-      ) {
-        userScore += 5;
-      }
-    });
-    setScore(userScore);
+  const calculateScore = async () => {
+    try {
+      const response = await axios.post(`/result/${exerciseId}`, {
+        answers,
+        userId,
+      });
+      setScore(response.data);
+      navigate(`/result/${exerciseId}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const answeredQuestions = answers.filter((answer) => answer !== "").length;
@@ -108,9 +103,9 @@ const Quiz = () => {
           </>
         )}
       </form>
-      {score !== null && (
+      {/* {score !== null && (
         <p className="text-xl font-bold mt-4">Your Score: {score}</p>
-      )}
+      )} */}
     </div>
   );
 };

@@ -2,12 +2,13 @@ import mongoose from "mongoose";
 
 const scoreSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  language: {
+  exercise: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Language",
+    ref: "Exercise",
     required: true,
   },
   score: { type: Number, required: true },
+  answers: [{ type: String }],
 });
 
-export const Score = mongoose.model("Score", scoreSchema);
+export const ScoreModel = mongoose.model("Score", scoreSchema);
