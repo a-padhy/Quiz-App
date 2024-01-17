@@ -117,6 +117,32 @@ app.post("/result/:exerciseId", async (req, res) => {
   }
 });
 
+app.get("/leaderboard/:languageId", async (req, res) => {
+  const { languageId } = req.params;
+  try {
+    const scores = await ScoreModel.find().populate("user exercise");
+    const scoresByLanguage = scores.filter(
+      (score) => score.exercise.language.toString() === languageId
+    );
+    const scoreDetails = scoresByLanguage.map((score) => ({
+      _id: score._id,
+      user: {
+        _id: score.user._id,
+        username: score.user.username,
+      },
+      exercise: {
+        _id: score.exercise._id,
+        language: score.exercise.language,
+      },
+      score: score.score,
+    }));
+    res.json({ scoreDetails });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 const port = process.env.PORT || 4000;
 const start = async () => {
   try {
