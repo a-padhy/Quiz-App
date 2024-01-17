@@ -19,7 +19,8 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173",
+    origin: "https://quiz-app-client-six.vercel.app",
   })
 );
 app.use("/auth", userRouter);
