@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 const Leaderboard = () => {
   const [scoreDetails, setScoreDetails] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { languageId } = useParams();
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -12,6 +13,8 @@ const Leaderboard = () => {
         setScoreDetails(response.data.scoreDetails);
       } catch (error) {
         console.error("Error fetching leaderboard:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchLeaderboard();
@@ -34,27 +37,33 @@ const Leaderboard = () => {
   );
 
   return (
-    <div className="max-w-2xl mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
-      <table className="min-w-full border border-gray-300">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="py-2 px-4 border">Rank</th>
-            <th className="py-2 px-4 border">Username</th>
-            <th className="py-2 px-4 border">Total Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedUsers.map((user, index) => (
-            <tr key={user._id}>
-              <td className="py-2 px-4 border">{index + 1}</td>
-              <td className="py-2 px-4 border">{user.username}</td>
-              <td className="py-2 px-4 border">{user.totalScore}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <>
+      {loading ? (
+        <p className="text-center text-gray-600 mt-20">Loading Leaderboard</p>
+      ) : (
+        <div className="max-w-2xl mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
+          <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
+          <table className="min-w-full border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="py-2 px-4 border">Rank</th>
+                <th className="py-2 px-4 border">Username</th>
+                <th className="py-2 px-4 border">Total Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedUsers.map((user, index) => (
+                <tr key={user._id}>
+                  <td className="py-2 px-4 border">{index + 1}</td>
+                  <td className="py-2 px-4 border">{user.username}</td>
+                  <td className="py-2 px-4 border">{user.totalScore}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
   );
 };
 
