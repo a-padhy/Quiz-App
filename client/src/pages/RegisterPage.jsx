@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [preferredLanguage, setPreferredLanguage] = useState("english");
 
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ const Register = () => {
       await axios.post("/auth/register", {
         username,
         password,
+        preferredLanguage,
       });
       alert("Registration successful! Now you can login.");
       navigate("/login");
@@ -63,6 +65,25 @@ const Register = () => {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="preferredLanguage"
+            >
+              Preferred Language
+            </label>
+            <select
+              className="border rounded w-full py-2 px-3"
+              id="preferredLanguage"
+              value={preferredLanguage}
+              onChange={(event) => setPreferredLanguage(event.target.value)}
+            >
+              <option value="english">English</option>
+              <option value="hindi">Hindi</option>
+              <option value="spanish">Spanish</option>
+              <option value="french">French</option>
+            </select>
           </div>
           <button
             className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"

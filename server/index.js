@@ -184,6 +184,7 @@ app.get("/profile/:id", async (req, res) => {
       .populate("progress.completedExercises");
     const progressDetails = {
       _id: user._id,
+      preferredLanguage: user.preferredLanguage,
       progress: user.progress.map((prog) => ({
         language: {
           _id: prog.language._id,
