@@ -13,7 +13,8 @@ import axios from "axios";
 import ResultPage from "./pages/ResultPage";
 import Leaderboard from "./components/LeaderBoard";
 
-axios.defaults.baseURL = "http://localhost:4000/";
+// axios.defaults.baseURL = "http://localhost:4000/";
+axios.defaults.baseURL = "https://quiz-app-henna-zeta.vercel.app/";
 axios.defaults.withCredentials = true;
 
 const App = () => {
